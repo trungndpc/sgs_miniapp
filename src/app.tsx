@@ -21,12 +21,10 @@ import { navigateTab, getNavigationDirection } from '@/utils/navigation';
 import Header from '@/components/Header';
 import { PATHS, PATH_TO_TAB } from '@/constants/paths';
 import { AuthProvider } from '@/context/AuthContext';
+import { isZaloRuntime } from '@/lib/runtime';
 
 const queryClient = new QueryClient();
 const TRANSITION_MS = 300;
-const isZaloRuntime =
-  Boolean((window as Window & { APP_ID?: string }).APP_ID) ||
-  window.location.hostname === 'h5.zdn.vn';
 
 const RuntimeRouter: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   isZaloRuntime ? <ZMPRouter>{children}</ZMPRouter> : <BrowserRouter>{children}</BrowserRouter>;

@@ -7,6 +7,7 @@ import { navigateForward } from '@/utils/navigation';
 import { PATHS } from '@/constants/paths';
 import { contentService } from '@/services/content';
 import { useAuth } from '@/context/AuthContext';
+import { isZaloRuntime } from '@/lib/runtime';
 import logoSgs from '@/assets/logo-sgs.png';
 
 const HomePage: React.FC = () => {
@@ -23,6 +24,7 @@ const HomePage: React.FC = () => {
   });
 
   React.useEffect(() => {
+    if (!isZaloRuntime) return;
     configAppView({
       headerColor: '#111111',
       headerTextColor: 'white',

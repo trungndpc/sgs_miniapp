@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { authStorage } from '@/lib/authStorage';
+import { isZaloRuntime } from '@/lib/runtime';
 import { fetchMe, loginWithZalo, type GalaxyUser } from '@/services/identity';
 
 interface AuthState {
@@ -21,6 +22,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       if (!authStorage.getUserId()) {
+        if (!isZaloRuntime) {
+          setUser(null);
+          return;
+        }
         const result = await loginWithZalo({ withPhone: false });
         setUser(result.user);
         setIsMember(result.is_member);
@@ -46,6 +51,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const ensureLogin = useCallback(async () => {
     if (user) return user;
+    if (!isZaloRuntime) {
+      throw new Error('Hãy mở Mini App trong Zalo để đăng nhập.');
+    }
     const result = await loginWithZalo({ withPhone: false });
     setUser(result.user);
     setIsMember(result.is_member);
