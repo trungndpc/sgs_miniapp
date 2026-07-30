@@ -1,4 +1,4 @@
-name: Production build
+name: Production
 
 on:
   push:
@@ -23,8 +23,37 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          VITE_IDENTITY_API_BASE_URL: https://identify.g.udev.com.vn
+          VITE_CONTENT_API_BASE_URL: https://content.g.udev.com.vn
+          VITE_TENANT_CODE: sgs
+          VITE_ZALO_AUTH_DEV_MODE: "false"
+      - run: tar -C www -czf sgs_miniapp-${GITHUB_SHA}.tar.gz .
       - uses: actions/upload-artifact@v4
         with:
           name: sgs_miniapp-${{ github.sha }}
-          path: www
+          path: sgs_miniapp-${{ github.sha }}.tar.gz
           if-no-files-found: error
+
+      - name: Install SSH credentials
+        if: vars.DEPLOY_ENABLED == 'true'
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/deploy_key ~/.ssh/known_hosts
+
+      - name: Deploy production
+        if: vars.DEPLOY_ENABLED == 'true'
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          scp -i ~/.ssh/deploy_key \
+            sgs_miniapp-${GITHUB_SHA}.tar.gz \
+            "${DEPLOY_USER}@${DEPLOY_HOST}:/opt/sgs/incoming/sgs_miniapp-${GITHUB_SHA}.tar.gz"
+          ssh -i ~/.ssh/deploy_key "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "sudo /usr/local/sbin/sgs-deploy sgs_miniapp ${GITHUB_SHA}"
