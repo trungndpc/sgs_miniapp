@@ -1,0 +1,229 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --zaui-light-bottom-navigation-divider-color: transparent;
+  /* Official SGS orange from brand mark */
+  --sgs-yellow: #f36617;
+  --sgs-orange: #f36617;
+  --sgs-ink: #111111;
+  --sgs-mute: #6b6b6b;
+  --sgs-line: #e8e8e8;
+  --sgs-paper: #f7f6f3;
+  --sgs-white: #ffffff;
+}
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand: #f36617;
+  --color-sgs-yellow: #f36617;
+  --color-sgs-orange: #f36617;
+  --color-sgs-black: #111111;
+  --color-sgs-gray: #6b6b6b;
+  --color-sgs-bg: #f7f6f3;
+  --color-sgs-white: #ffffff;
+  --color-sgs-border: #e8e8e8;
+  --color-sgs-soft: #fff1e8;
+
+  --color-primary: #111111;
+  --color-secondary: #333333;
+  --color-dark: #111111;
+  --color-deep: #111111;
+  --color-muted: #6b6b6b;
+  --color-icon: #8a8a8a;
+  --color-meta: #6b6b6b;
+  --color-neutral: #6b6b6b;
+  --color-slate: #6b6b6b;
+  --color-surface: #f7f6f3;
+  --color-surface-card: #ffffff;
+  --color-icon-bg: #fff8e0;
+  --color-divider: #e8e8e8;
+
+  --text-caption: 0.6875rem;
+  --text-body-sm: 0.75rem;
+  --text-title-sm: 0.8125rem;
+  --text-body-md: 0.875rem;
+  --text-body-lg: 0.9375rem;
+  --text-title-md: 1rem;
+  --text-title-lg: 1.125rem;
+}
+
+html,
+body,
+#app {
+  font-family: var(--font-sans);
+  background: var(--sgs-paper);
+  color: var(--sgs-ink);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  /* Avoid black peek under bottom nav on desktop / safe-area */
+  background-color: #ffffff;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Motion */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+@keyframes barIn {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.anim-fade-up {
+  animation: fadeUp 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-fade-up-delay {
+  animation: fadeUp 620ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-fade-up-delay-2 {
+  animation: fadeUp 700ms 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-zoom {
+  animation: slowZoom 18s ease-out forwards;
+}
+.accent-bar {
+  transform-origin: left;
+  animation: barIn 700ms 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Page transitions — GPU-friendly, tab = fade, push/pop = slide */
+.page-transition-group {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--sgs-paper);
+}
+.page-shell {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--sgs-paper);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.page-enter,
+.page-exit {
+  will-change: transform, opacity;
+}
+
+/* Tab switch — light fade */
+.slide-tab .page-enter {
+  opacity: 0;
+}
+.slide-tab .page-enter-active {
+  opacity: 1;
+  transition: opacity 160ms ease-out;
+  z-index: 2;
+}
+.slide-tab .page-exit {
+  opacity: 1;
+}
+.slide-tab .page-exit-active {
+  opacity: 0;
+  transition: opacity 140ms ease-in;
+  z-index: 1;
+}
+
+/* Push — iOS-like slide */
+.slide-forward .page-enter {
+  transform: translate3d(100%, 0, 0);
+}
+.slide-forward .page-enter-active {
+  transform: translate3d(0, 0, 0);
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 2;
+}
+.slide-forward .page-exit {
+  transform: translate3d(0, 0, 0);
+}
+.slide-forward .page-exit-active {
+  transform: translate3d(-22%, 0, 0);
+  opacity: 0.9;
+  transition:
+    transform 300ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 300ms ease;
+  z-index: 1;
+}
+
+/* Pop */
+.slide-backward .page-enter {
+  transform: translate3d(-22%, 0, 0);
+  opacity: 0.9;
+}
+.slide-backward .page-enter-active {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transition:
+    transform 300ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 300ms ease;
+  z-index: 1;
+}
+.slide-backward .page-exit {
+  transform: translate3d(0, 0, 0);
+}
+.slide-backward .page-exit-active {
+  transform: translate3d(100%, 0, 0);
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 2;
+}
+
+/* Bottom nav — white bar, no black safe-area strip */
+.zaui-bottom-navigation {
+  background-color: #ffffff !important;
+  height: auto !important;
+}
+.zaui-bottom-navigation-content {
+  padding-top: 6px !important;
+  background-color: #ffffff !important;
+}
+.zaui-bottom-navigation .zaui-bottom-navigation-item {
+  color: #8a8a8a !important;
+}
+.zaui-bottom-navigation .zaui-bottom-navigation-item.active {
+  color: #f36617 !important;
+}
+.zaui-bottom-navigation::after {
+  display: none;
+}
+
+.zaui-header {
+  background-color: #111111 !important;
+}
+.zaui-header .zaui-header-title {
+  color: #ffffff !important;
+}
+
+/* Article body */
+.sgs-prose p { margin-bottom: 0.9rem; line-height: 1.65; color: #2a2a2a; }
+.sgs-prose ul { margin: 0.75rem 0 1rem 1.1rem; list-style: disc; }
+.sgs-prose li { margin-bottom: 0.35rem; line-height: 1.55; }
+.sgs-prose a { color: #111; text-decoration: underline; text-underline-offset: 3px; }
+.sgs-prose strong { font-weight: 600; color: #111; }
+
+/* Native form polish for zmp inputs */
+.zaui-input,
+.zaui-input-affix-wrapper {
+  border-radius: 0 !important;
+  border-color: #e8e8e8 !important;
+}

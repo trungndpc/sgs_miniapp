@@ -1,0 +1,8 @@
+{
+  "app": {
+    "title": "SGS Academy",
+    "headerColor": "#1A1A1A",
+    "textColor": "white",
+    "statusBar": "normal"
+  }
+}
