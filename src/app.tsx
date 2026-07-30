@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App, ZMPRouter, SnackbarProvider, Text, Box, BottomNavigation } from 'zmp-ui';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import HomePage from '@/pages/HomePage';
 import NewsPage from '@/pages/NewsPage';
@@ -24,6 +24,12 @@ import { AuthProvider } from '@/context/AuthContext';
 
 const queryClient = new QueryClient();
 const TRANSITION_MS = 300;
+const isZaloRuntime =
+  Boolean((window as Window & { APP_ID?: string }).APP_ID) ||
+  window.location.hostname === 'h5.zdn.vn';
+
+const RuntimeRouter: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+  isZaloRuntime ? <ZMPRouter>{children}</ZMPRouter> : <BrowserRouter>{children}</BrowserRouter>;
 
 const AppRoutes: React.FC<{ location: ReturnType<typeof useLocation> }> = ({ location }) => (
   <Routes location={location}>
@@ -128,9 +134,9 @@ const MyApp: React.FC = () => {
       <AuthProvider>
         <App>
           <SnackbarProvider>
-            <ZMPRouter>
+            <RuntimeRouter>
               <AnimatedRoutes />
-            </ZMPRouter>
+            </RuntimeRouter>
           </SnackbarProvider>
         </App>
       </AuthProvider>
