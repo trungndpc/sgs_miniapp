@@ -217,9 +217,56 @@ body {
 /* Article body */
 .sgs-prose p { margin-bottom: 0.9rem; line-height: 1.65; color: #2a2a2a; }
 .sgs-prose ul { margin: 0.75rem 0 1rem 1.1rem; list-style: disc; }
+.sgs-prose ol { margin: 0.75rem 0 1rem 1.25rem; list-style: decimal; }
 .sgs-prose li { margin-bottom: 0.35rem; line-height: 1.55; }
 .sgs-prose a { color: #111; text-decoration: underline; text-underline-offset: 3px; }
 .sgs-prose strong { font-weight: 600; color: #111; }
+.sgs-prose h1,
+.sgs-prose h2,
+.sgs-prose h3 {
+  margin: 1.25rem 0 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.25;
+  color: #111;
+}
+.sgs-prose h1 { font-size: 1.75rem; }
+.sgs-prose h2 { font-size: 1.4rem; }
+.sgs-prose h3 { font-size: 1.15rem; }
+.sgs-prose img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.25rem auto;
+  border-radius: 0.5rem;
+}
+.sgs-prose blockquote {
+  margin: 1rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 4px solid #f36617;
+  color: #555;
+  font-style: italic;
+}
+.sgs-prose code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  background: #f1f1f1;
+  font-size: 0.9em;
+}
+.sgs-prose pre {
+  overflow-x: auto;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: #151515;
+  color: #f5f5f5;
+  white-space: pre-wrap;
+}
+.sgs-prose pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
 
 /* Native form polish for zmp inputs */
 .zaui-input,
