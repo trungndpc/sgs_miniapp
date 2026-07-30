@@ -267,6 +267,53 @@ body {
   background: transparent;
   color: inherit;
 }
+.sgs-prose iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  margin: 1.25rem auto;
+  border: 0;
+  border-radius: 0.5rem;
+}
+.sgs-prose hr {
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 2px solid #e5e5e5;
+}
+.sgs-prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border-collapse: collapse;
+}
+.sgs-prose th,
+.sgs-prose td {
+  min-width: 7rem;
+  padding: 0.6rem;
+  border: 1px solid #d8d8d8;
+  text-align: left;
+  vertical-align: top;
+}
+.sgs-prose th {
+  background: #f5f5f5;
+  font-weight: 700;
+}
+.sgs-prose ul[data-type="taskList"] {
+  margin-left: 0;
+  padding: 0;
+  list-style: none;
+}
+.sgs-prose ul[data-type="taskList"] li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.sgs-prose mark {
+  padding: 0.05rem 0.15rem;
+}
 
 /* Native form polish for zmp inputs */
 .zaui-input,
