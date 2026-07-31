@@ -1,8 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { authStorage } from '@/lib/authStorage';
-import { setReauthHandler } from '@/lib/api';
 import { isZaloRuntime } from '@/lib/runtime';
-import { fetchMe, loginWithZalo, type GalaxyUser } from '@/services/identity';
+import { loginWithZalo, type GalaxyUser } from '@/services/identity';
 
 interface AuthState {
   loading: boolean;
@@ -22,35 +21,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      if (!authStorage.getAccessToken()) {
-        if (!isZaloRuntime) {
-          setUser(null);
-          return;
-        }
-        const result = await loginWithZalo({ withPhone: false });
-        setUser(result.user);
-        setIsMember(result.is_member);
+      if (!isZaloRuntime) {
+        setUser(null);
         return;
       }
-      const me = await fetchMe();
-      setUser(me);
-      const member = Boolean(me.roles?.some((r) => r.code === 'member'));
-      setIsMember(member);
-      authStorage.setIsMember(member);
+      const result = await loginWithZalo({ withPhone: false });
+      setUser(result.user);
+      setIsMember(result.is_member);
     } catch {
-      try {
-        if (!isZaloRuntime) {
-          authStorage.clear();
-          setUser(null);
-          return;
-        }
-        const result = await loginWithZalo({ withPhone: false });
-        setUser(result.user);
-        setIsMember(result.is_member);
-      } catch {
-        authStorage.clear();
-        setUser(null);
-      }
+      authStorage.clear();
+      setUser(null);
+      setIsMember(false);
     } finally {
       setLoading(false);
     }
@@ -66,21 +47,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsMember(result.is_member);
     return result.user;
   }, [user]);
-
-  useEffect(() => {
-    setReauthHandler(async () => {
-      if (!isZaloRuntime) return false;
-      try {
-        const result = await loginWithZalo({ withPhone: false });
-        setUser(result.user);
-        setIsMember(result.is_member);
-        return true;
-      } catch {
-        return false;
-      }
-    });
-    return () => setReauthHandler(null);
-  }, []);
 
   useEffect(() => {
     refresh();

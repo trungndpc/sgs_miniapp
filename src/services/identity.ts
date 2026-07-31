@@ -19,7 +19,6 @@ export interface ZaloAuthResult {
   access_token: string;
   token_type: string;
   expires_in: number;
-  user_id: number;
   user: GalaxyUser;
   is_member: boolean;
 }
@@ -60,7 +59,6 @@ async function resolveZaloAuthBody(options?: { withPhone?: boolean }): Promise<Z
 
 function persistSession(result: ZaloAuthResult) {
   authStorage.setAccessToken(result.access_token);
-  authStorage.setUserId(result.user_id);
   authStorage.setIsMember(result.is_member);
 }
 

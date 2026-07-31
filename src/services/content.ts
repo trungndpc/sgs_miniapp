@@ -40,7 +40,6 @@ export interface CourseSession {
 export interface CourseRegistration {
   id: number;
   course_id: number;
-  user_id: number;
   status: string;
   course?: Course | null;
 }
