@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { authStorage } from '@/lib/authStorage';
+import { setReauthHandler } from '@/lib/api';
 import { isZaloRuntime } from '@/lib/runtime';
 import { fetchMe, loginWithZalo, type GalaxyUser } from '@/services/identity';
 
@@ -21,7 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      if (!authStorage.getUserId()) {
+      if (!authStorage.getAccessToken()) {
         if (!isZaloRuntime) {
           setUser(null);
           return;
@@ -38,10 +39,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authStorage.setIsMember(member);
     } catch {
       try {
+        if (!isZaloRuntime) {
+          authStorage.clear();
+          setUser(null);
+          return;
+        }
         const result = await loginWithZalo({ withPhone: false });
         setUser(result.user);
         setIsMember(result.is_member);
       } catch {
+        authStorage.clear();
         setUser(null);
       }
     } finally {
@@ -59,6 +66,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsMember(result.is_member);
     return result.user;
   }, [user]);
+
+  useEffect(() => {
+    setReauthHandler(async () => {
+      if (!isZaloRuntime) return false;
+      try {
+        const result = await loginWithZalo({ withPhone: false });
+        setUser(result.user);
+        setIsMember(result.is_member);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+    return () => setReauthHandler(null);
+  }, []);
 
   useEffect(() => {
     refresh();

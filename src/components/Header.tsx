@@ -18,9 +18,9 @@ const Header: React.FC<HeaderProps> = (props) => {
             alt="SGS"
             className="h-9 w-auto object-contain object-left"
           />
-          <span className="font-display text-[11px] font-semibold tracking-[0.14em] text-white/70 uppercase">
+          {/* <span className="font-display text-[11px] font-semibold tracking-[0.14em] text-white/70 uppercase">
             Academy
-          </span>
+          </span> */}
         </div>
       </header>
     );

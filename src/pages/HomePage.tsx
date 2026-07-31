@@ -8,7 +8,6 @@ import { PATHS } from '@/constants/paths';
 import { contentService } from '@/services/content';
 import { useAuth } from '@/context/AuthContext';
 import { isZaloRuntime } from '@/lib/runtime';
-import logoSgs from '@/assets/logo-sgs.png';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();

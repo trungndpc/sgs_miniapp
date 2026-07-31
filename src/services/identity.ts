@@ -16,6 +16,9 @@ export interface GalaxyUser {
 }
 
 export interface ZaloAuthResult {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
   user_id: number;
   user: GalaxyUser;
   is_member: boolean;
@@ -55,11 +58,16 @@ async function resolveZaloAuthBody(options?: { withPhone?: boolean }): Promise<Z
   throw new Error('Không lấy được Zalo access token. Hãy mở Mini App trong Zalo.');
 }
 
+function persistSession(result: ZaloAuthResult) {
+  authStorage.setAccessToken(result.access_token);
+  authStorage.setUserId(result.user_id);
+  authStorage.setIsMember(result.is_member);
+}
+
 export async function loginWithZalo(options?: { withPhone?: boolean }): Promise<ZaloAuthResult> {
   const body = await resolveZaloAuthBody(options);
   const result = await unwrap<ZaloAuthResult>(identityApi.post('/api/v1/user/auth/zalo', body));
-  authStorage.setUserId(result.user_id);
-  authStorage.setIsMember(result.is_member);
+  persistSession(result);
   return result;
 }
 

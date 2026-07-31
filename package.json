@@ -7,6 +7,9 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
+    "zmp:login": "zmp login",
+    "zmp:deploy": "zmp deploy -p -m \"SGS Academy deploy\"",
+    "zmp:deploy:testing": "zmp deploy -p -t -m \"SGS Academy testing\"",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "repository": {
